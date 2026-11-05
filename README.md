@@ -2,6 +2,8 @@
 
 A "We'll Be Right Back" page for when the Rewst service is down. It looks like a normal status page, but the illustration is a small click-and-find game.
 
+![The We'll Be Right Back page, with Stewart at his desk in front of a monitor reading SERVICE DOWN](docs/screenshot.png)
+
 Stewart the rooster is at his desk, it's raining, and something is wrong with the rack. There are 12 clues to find, and the tray in the corner tracks which ones you've got. Find them all to learn the root cause.
 
 No build step and no dependencies. It's plain HTML, CSS and JS.
