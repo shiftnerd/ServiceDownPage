@@ -204,3 +204,10 @@
 .bu-reveal-close { height: 44px; padding: 0 24px; border: 0; border-radius: var(--radius); background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); font: 700 14px inherit; font-family: inherit; cursor: pointer; }
 .bu-reveal-close:hover { opacity: .9; }
 .bu-reveal-close:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* phones: the clue tray gets its own strip under the picture so it never covers the shelf, plant or rack */
+@media (max-width: 760px) {
+  .bu-hero { aspect-ratio: auto; height: auto; padding-bottom: 40px; }
+  .bu-tray { top: auto; bottom: 8px; right: 50%; transform: translateX(50%); }
+  .bu-caption { bottom: 48px; }
+}
