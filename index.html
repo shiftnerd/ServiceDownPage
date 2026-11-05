@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>We'll Be Right Back · Rewst</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="interactive.css">
+</head>
+<body>
+<div class="bu-page">
+  <div class="bu-container">
+    <img src="assets/rewst_logo_ondark.svg" alt="Rewst" class="bu-logo">
+
+    <main class="bu-panel">
+      <figure class="bu-hero">
+        <div class="bu-scene" id="scene">
+          <img src="assets/plate.webp" alt="Stewart, the Rewst rooster, sits at his desk looking sadly at a monitor that says the service is down. It is raining outside." class="bu-scene-img" width="1920" height="1080">
+          <img src="assets/plate-solved.webp" alt="" class="bu-scene-img bu-plate-solved" id="plateSolved" width="1920" height="1080" aria-hidden="true">
+
+          <!-- Everything that moves lives in one SVG laid over the picture, in the picture's own 1920x1080 coordinates. -->
+          <svg class="bu-layer" id="layer" viewBox="0 0 1920 1080" aria-hidden="true">
+            <defs>
+              <clipPath id="skyClip"><rect x="264" y="181" width="307" height="277"/></clipPath>
+            </defs>
+            <!-- rain + lightning, only inside the window pane -->
+            <g clip-path="url(#skyClip)">
+              <g id="rain"></g>
+              <rect class="bu-flash-sky" id="flashSky" x="264" y="181" width="307" height="277"/>
+            </g>
+            <rect class="bu-win-bar" x="413.5" y="181" width="8" height="277"/>
+            <rect class="bu-win-bar" x="264" y="315" width="307" height="8"/>
+            <rect class="bu-flash-room" id="flashRoom" x="0" y="0" width="1920" height="1080"/>
+            <!-- plant leaves (they droop and perk up) -->
+            <g class="bu-leaf" id="leafA"><ellipse cx="1322" cy="218" rx="13.5" ry="27" fill="#00BBB4" transform="rotate(-20 1322 218)"/></g>
+            <g class="bu-leaf" id="leafB"><ellipse cx="1344" cy="212" rx="13.5" ry="30" fill="#005655" transform="rotate(18 1344 212)"/></g>
+            <!-- the rubber duck, on the desk -->
+            <g transform="translate(1382 668) scale(.5)"><g class="bu-duck" id="duckSvg">
+              <ellipse cx="0" cy="14" rx="52" ry="36" fill="#FBC766"/><circle cx="32" cy="-26" r="26" fill="#FBC766"/>
+              <path d="M-30 6q14 18 40 4" fill="none" stroke="#FDD999" stroke-width="7" stroke-linecap="round"/>
+              <ellipse cx="62" cy="-22" rx="16" ry="8" fill="#F9A100"/><circle cx="40" cy="-32" r="4.2" fill="#010101"/>
+            </g></g>
+            <!-- rack LEDs, one per unit -->
+            <g id="leds"></g>
+            <g id="smoke" class="bu-smoke">
+              <ellipse cx="1520" cy="352" rx="34" ry="22" fill="#BAB3CF"/><ellipse cx="1566" cy="346" rx="40" ry="26" fill="#BAB3CF"/>
+              <ellipse cx="1612" cy="352" rx="32" ry="21" fill="#BAB3CF"/><ellipse cx="1548" cy="344" rx="28" ry="18" fill="#968EB5"/>
+            </g>
+            <!-- the desk phone's message light -->
+            <circle class="bu-phone-led" id="phoneLed" cx="1216" cy="659" r="2.8" fill="#F15B5B"/>
+            <!-- Stewart's pupil: the only part of his eye that moves -->
+            <circle id="pupil" cx="650" cy="580" r="10.2" fill="#010101"/>
+            <!-- the monitor glow when something nice happens -->
+            <rect class="bu-pulse" id="pulse" x="788" y="339" width="473" height="311" rx="22"/>
+          </svg>
+
+          <!-- hotspots: real buttons (keyboard + screen reader friendly), invisible until hovered -->
+          <button type="button" class="bu-hs" id="hsWindow" data-box="264,181,307,277" aria-label="The window"></button>
+          <div class="bu-clip" id="jesseClip" style="--box:264,181,307,277">
+            <button type="button" class="bu-peeker" id="jesse" aria-label="Someone outside the window"><img src="assets/jesse.webp" alt="" width="84" height="84"></button>
+          </div>
+          <button type="button" class="bu-hs" id="hsPoster" data-box="213,494,202,264" aria-label="An OSI model poster"></button>
+          <button type="button" class="bu-hs" id="hsDuck" data-box="1338,612,92,74" aria-label="A rubber duck. Ask it anything."></button>
+          <button type="button" class="bu-hs" id="hsBook1" data-box="1178,200,27,64" aria-label="Book: MCSE for Dummies"></button>
+          <button type="button" class="bu-hs" id="hsBook2" data-box="1205,211,26,53" aria-label="Book: Network+"></button>
+          <button type="button" class="bu-hs" id="hsBook3" data-box="1231,191,26,73" aria-label="Book: PowerShell in a Month of Lunches"></button>
+          <button type="button" class="bu-hs" id="hsPlant" data-box="1292,176,82,92" aria-label="The plant"></button>
+          <button type="button" class="bu-hs" id="hsStapler" data-box="750,642,92,42" aria-label="A red stapler"></button>
+          <button type="button" class="bu-hs" id="hsPhone" data-box="1146,632,84,52" aria-label="A VoIP desk phone with a blinking message light"></button>
+          <button type="button" class="bu-hs" id="hsMug" data-box="1254,618,76,66" aria-label="A coffee mug"></button>
+          <button type="button" class="bu-hs" id="hsTrash" data-box="1244,780,100,124" aria-label="A trash can"></button>
+          <button type="button" class="bu-hs" id="hsDrawer" data-box="1132,722,214,44" aria-label="The desk drawer"></button>
+          <button type="button" class="bu-hs bu-hs-stewart" id="hsStewart" data-box="525,395,225,290" aria-label="Stewart"></button>
+          <button type="button" class="bu-hs" id="hsRack" data-box="1455,350,210,422" aria-label="The server rack, zoomed in"></button>
+          <div id="units"></div>
+          <div class="bu-clip" id="danialClip" style="--box:1440,200,250,152">
+            <button type="button" class="bu-peeker" id="danial" aria-label="Someone behind the server rack"><img src="assets/danial.webp" alt="" width="84" height="84"><i class="bu-sweat"></i></button>
+          </div>
+
+          <button type="button" class="bu-walker" id="walker" data-box="1540,790,84,84" tabindex="-1" aria-hidden="true" hidden><img src="assets/danial.webp" alt="" width="84" height="84"></button>
+
+          <!-- the monitor (existing easter egg: plays the video) -->
+          <button type="button" class="bu-screen" id="screen" aria-label="Play the video on the monitor" aria-pressed="false">
+            <span class="bu-screen-text">
+              <span class="bu-scr-title">SERVICE DOWN</span>
+              <span class="bu-scr-rule"></span>
+              <span class="bu-scr-sub" id="scrSub">503 &middot; reconnecting</span>
+              <span class="bu-scr-prompt">&gt; retry --now<i class="bu-cursor"></i></span>
+            </span>
+            <video id="video" playsinline preload="none" disableremoteplayback disablepictureinpicture tabindex="-1"></video>
+            <span class="bu-screen-hint" aria-hidden="true">&#9654;</span>
+            <span class="bu-screen-load" aria-hidden="true"><i></i><i></i><i></i></span>
+          </button>
+          <button type="button" class="bu-expand" id="expand" aria-label="Watch the video larger">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2H6v4H4zM14 4h6v6h-2V6h-4zM4 14h2v4h4v2H4zM18 14h2v6h-6v-2h4z"/></svg>
+          </button>
+
+          <div class="bu-duck-bubble" id="duckBubble" role="status" aria-live="polite"></div>
+
+          <!-- mug close-up -->
+          <div class="bu-mug-card" id="mugCard" aria-hidden="true">
+            <svg viewBox="0 0 150 130" aria-hidden="true">
+              <path d="M104 40h14a18 18 0 0 1 0 36h-14" fill="none" stroke="#78CFCF" stroke-width="9" stroke-linecap="round"/>
+              <rect x="22" y="22" width="88" height="92" rx="12" fill="#78CFCF"/>
+              <rect x="22" y="22" width="88" height="14" rx="7" fill="#005655"/>
+              <text x="66" y="68" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="25" fill="#141121">#1</text>
+              <text x="66" y="88" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="10.5" fill="#141121" letter-spacing=".6">SYSADMIN</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="bu-status-badge" role="status"><span class="bu-status-dot"></span>Service Unavailable</div>
+        <div class="bu-tray" id="tray" title="Clues found">
+          <span class="bu-tray-label" id="trayLabel">Clues 0/12</span>
+          <span class="bu-tray-pips" id="trayPips"></span>
+        </div>
+        <div class="bu-caption" id="caption" role="status" aria-live="polite"></div>
+      </figure>
+
+      <div class="bu-card" aria-live="polite">
+        <div class="bu-card-copy">
+          <h1 class="bu-headline">We&rsquo;ll Be Right Back</h1>
+          <div class="bu-divider" aria-hidden="true"></div>
+          <p class="bu-body">
+            Rewst is temporarily unavailable. Our team is on it and we expect
+            to be back shortly. Your automations will resume automatically.
+          </p>
+          <div class="bu-monitor"><span class="bu-teal-dot" aria-hidden="true"></span>Monitoring active</div>
+        </div>
+        <div class="bu-card-actions">
+          <a href="https://status.rewst.io" class="bu-btn-primary">View Status Page</a>
+          <button type="button" class="bu-btn-retry" id="retry">Try Again</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Theater: the video, enlarged -->
+<dialog class="bu-theater" id="theater" aria-label="Video">
+  <div class="bu-theater-stage" id="theaterStage"></div>
+  <button type="button" class="bu-theater-close" id="theaterClose" aria-label="Close">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.7 4.3L12 10.6l6.3-6.3 1.4 1.4-6.3 6.3 6.3 6.3-1.4 1.4-6.3-6.3-6.3 6.3-1.4-1.4 6.3-6.3-6.3-6.3z"/></svg>
+  </button>
+</dialog>
+
+<!-- The desk drawer, zoomed in: click-and-find knick-knacks -->
+<dialog class="bu-drawer" id="drawer" aria-label="Desk drawer">
+  <div class="bu-drawer-bar"><span>Top drawer</span><button type="button" id="drawerClose" aria-label="Close the drawer">Close &times;</button></div>
+  <svg viewBox="0 0 800 440" class="bu-drawer-svg" id="drawerSvg" role="group" aria-label="Things in the drawer">
+    <rect x="6" y="6" width="788" height="428" rx="22" fill="#0f0d1c" stroke="#504384" stroke-width="12"/>
+    <rect x="30" y="30" width="740" height="380" rx="12" fill="#141121"/>
+    <path d="M30 150h740M30 290h740M300 30v380M560 30v380" stroke="#282242" stroke-width="5" fill="none"/>
+    <!-- a Raspberry Pi, running something -->
+    <g class="bu-item" id="itPi" tabindex="0" role="button" aria-label="A Raspberry Pi" transform="translate(150 92)">
+      <rect x="-82" y="-50" width="164" height="100" rx="8" fill="#005655" stroke="#00BBB4" stroke-width="3"/>
+      <g fill="#FBC766"><rect x="-62" y="-48" width="4" height="9"/><rect x="-55" y="-48" width="4" height="9"/><rect x="-48" y="-48" width="4" height="9"/><rect x="-41" y="-48" width="4" height="9"/><rect x="-34" y="-48" width="4" height="9"/><rect x="-27" y="-48" width="4" height="9"/><rect x="-20" y="-48" width="4" height="9"/><rect x="-13" y="-48" width="4" height="9"/><rect x="-6" y="-48" width="4" height="9"/><rect x="1" y="-48" width="4" height="9"/><rect x="8" y="-48" width="4" height="9"/><rect x="15" y="-48" width="4" height="9"/><rect x="22" y="-48" width="4" height="9"/><rect x="29" y="-48" width="4" height="9"/><rect x="36" y="-48" width="4" height="9"/><rect x="43" y="-48" width="4" height="9"/><rect x="50" y="-48" width="4" height="9"/><rect x="57" y="-48" width="4" height="9"/><rect x="64" y="-48" width="4" height="9"/><rect x="71" y="-48" width="4" height="9"/></g>
+      <rect x="-28" y="-16" width="40" height="40" rx="3" fill="#BAB3CF"/><rect x="-18" y="-6" width="20" height="20" rx="2" fill="#968EB5"/>
+      <rect x="22" y="-14" width="28" height="22" rx="3" fill="#282242"/>
+      <rect x="56" y="-36" width="26" height="28" fill="#A5DFDF"/><rect x="56" y="-2" width="26" height="28" fill="#968EB5"/><rect x="56" y="30" width="26" height="22" fill="#78CFCF"/>
+      <g fill="#141121"><circle cx="-70" cy="-38" r="4"/><circle cx="-70" cy="38" r="4"/><circle cx="40" cy="38" r="4"/></g>
+      <circle cx="-56" cy="32" r="4" fill="#F15B5B"/><circle cx="-44" cy="32" r="4" fill="#00BBB4"/>
+    </g>
+    <!-- rollover (console) cable: flat light-blue ribbon, DB9 on one end, RJ45 on the other -->
+    <g class="bu-item" id="itCable" tabindex="0" role="button" aria-label="A rollover cable" transform="translate(430 92)">
+      <path d="M-94 4C-62 -40 -30 48 0 4S62 -34 94 4" fill="none" stroke="#78CFCF" stroke-width="20"/>
+      <path d="M-94 4C-62 -40 -30 48 0 4S62 -34 94 4" fill="none" stroke="#A5DFDF" stroke-width="3" stroke-dasharray="2 5"/>
+      <path d="M-142 -20H-94L-100 24H-136Z" fill="#BAB3CF"/><rect x="-150" y="-6" width="9" height="12" rx="2" fill="#968EB5"/><rect x="-93" y="-6" width="8" height="12" rx="2" fill="#968EB5"/>
+      <g fill="#141121"><circle cx="-128" cy="-8" r="2.6"/><circle cx="-120" cy="-8" r="2.6"/><circle cx="-112" cy="-8" r="2.6"/><circle cx="-104" cy="-8" r="2.6"/><circle cx="-124" cy="4" r="2.6"/><circle cx="-116" cy="4" r="2.6"/><circle cx="-108" cy="4" r="2.6"/><circle cx="-100" cy="4" r="2.6"/></g>
+      <rect x="92" y="-14" width="38" height="36" rx="4" fill="#A5DFDF"/><rect x="98" y="22" width="26" height="6" rx="2" fill="#78CFCF"/>
+      <g fill="#FBC766"><rect x="97" y="-10" width="3" height="12"/><rect x="102" y="-10" width="3" height="12"/><rect x="107" y="-10" width="3" height="12"/><rect x="112" y="-10" width="3" height="12"/><rect x="117" y="-10" width="3" height="12"/><rect x="122" y="-10" width="3" height="12"/></g>
+    </g>
+    <!-- a keyring with far too many keys -->
+    <g class="bu-item" id="itKeys" tabindex="0" role="button" aria-label="A keyring with too many keys" transform="translate(664 77) scale(1)">
+      <g fill="none" stroke="#BAB3CF" stroke-width="5"><circle cx="0" cy="-12" r="24"/></g>
+      <g id="keyFan">
+        <g transform="rotate(-52 0 12)"><circle cx="0" cy="20" r="9" fill="#FBC766"/><circle cx="0" cy="20" r="3" fill="#141121"/><rect x="-3.5" y="28" width="7" height="30" fill="#FBC766"/><rect x="3.5" y="46" width="7" height="5" fill="#FBC766"/><rect x="3.5" y="53" width="7" height="5" fill="#FBC766"/></g>
+        <g transform="rotate(-26 0 12)"><circle cx="0" cy="20" r="9" fill="#00BBB4"/><circle cx="0" cy="20" r="3" fill="#141121"/><rect x="-3.5" y="28" width="7" height="34" fill="#00BBB4"/><rect x="3.5" y="50" width="7" height="5" fill="#00BBB4"/><rect x="3.5" y="57" width="7" height="5" fill="#00BBB4"/></g>
+        <g transform="rotate(0 0 12)"><circle cx="0" cy="20" r="9" fill="#BAB3CF"/><circle cx="0" cy="20" r="3" fill="#141121"/><rect x="-3.5" y="28" width="7" height="32" fill="#BAB3CF"/><rect x="3.5" y="46" width="7" height="5" fill="#BAB3CF"/><rect x="3.5" y="53" width="7" height="5" fill="#BAB3CF"/></g>
+        <g transform="rotate(26 0 12)"><circle cx="0" cy="20" r="9" fill="#F15B5B"/><circle cx="0" cy="20" r="3" fill="#141121"/><rect x="-3.5" y="28" width="7" height="34" fill="#F15B5B"/><rect x="-10.5" y="50" width="7" height="5" fill="#F15B5B"/><rect x="-10.5" y="57" width="7" height="5" fill="#F15B5B"/></g>
+        <g transform="rotate(52 0 12)"><circle cx="0" cy="20" r="9" fill="#A5DFDF"/><circle cx="0" cy="20" r="3" fill="#141121"/><rect x="-3.5" y="28" width="7" height="30" fill="#A5DFDF"/><rect x="-10.5" y="46" width="7" height="5" fill="#A5DFDF"/><rect x="-10.5" y="53" width="7" height="5" fill="#A5DFDF"/></g>
+      </g>
+      <rect x="-9" y="-44" width="18" height="12" rx="3" fill="#504384"/>
+    </g>
+    <!-- server room access card, on a lanyard clip -->
+    <g class="bu-item" id="itCard" tabindex="0" role="button" aria-label="A server room access card" transform="translate(150 224)">
+      <rect x="-10" y="-70" width="20" height="24" rx="4" fill="#968EB5"/><rect x="-5" y="-62" width="10" height="9" rx="2" fill="#141121"/>
+      <rect x="-74" y="-46" width="148" height="96" rx="11" fill="#BAB3CF"/>
+      <path d="M-74 -35a11 11 0 0 1 11 -11h126a11 11 0 0 1 11 11v14h-148z" fill="#00BBB4"/>
+      <text x="-62" y="-27" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="11" letter-spacing="1.2" fill="#082C2C">ACCESS</text>
+      <circle cx="-38" cy="8" r="20" fill="#504384"/><circle cx="-38" cy="1" r="7.5" fill="#BAB3CF"/><path d="M-53 24a15 12 0 0 1 30 0z" fill="#BAB3CF"/>
+      <rect x="-10" y="-2" width="62" height="7" rx="3" fill="#282242"/><rect x="-10" y="11" width="44" height="7" rx="3" fill="#968EB5"/>
+      <rect x="40" y="27" width="22" height="16" rx="3" fill="#FBC766"/>
+      <text x="-10" y="40" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="9" fill="#141121">SERVER ROOM</text>
+    </g>
+    <!-- USB stick -->
+    <g class="bu-item" id="itUsb" tabindex="0" role="button" aria-label="A USB stick labeled bitcoin" transform="translate(430 222)">
+      <rect x="-26" y="-20" width="104" height="40" rx="8" fill="#504384"/><rect x="-62" y="-13" width="42" height="26" fill="#BAB3CF"/><rect x="-56" y="-7" width="10" height="5" fill="#141121"/><rect x="-56" y="3" width="10" height="5" fill="#141121"/>
+      <rect x="-14" y="-12" width="72" height="22" rx="3" fill="#A5DFDF"/><text x="22" y="4" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="11" fill="#141121">bitcoin</text>
+    </g>
+    <!-- floppy disk -->
+    <g class="bu-item" id="itFloppy" tabindex="0" role="button" aria-label="Floppy disk" transform="translate(664 222)">
+      <rect x="-48" y="-48" width="96" height="96" rx="7" fill="#282242" stroke="#504384" stroke-width="3"/><rect x="-26" y="-48" width="52" height="30" fill="#BAB3CF"/><rect x="6" y="-44" width="11" height="22" fill="#282242"/>
+      <rect x="-34" y="-2" width="68" height="44" fill="#fff"/><g text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="10"><text x="0" y="11" fill="#141121">v2_FINAL_</text><text x="0" y="24" fill="#792E2E">actual_</text><text x="0" y="37" fill="#141121">no_really</text></g>
+    </g>
+    <!-- stress ball -->
+    <g class="bu-item" id="itBall" tabindex="0" role="button" aria-label="Stress ball" transform="translate(150 350)">
+      <circle r="40" fill="#00BBB4"/><path d="M-30 -14q22 -22 52 -8" fill="none" stroke="#A5DFDF" stroke-width="7" stroke-linecap="round"/><path d="M-36 14q40 28 76 0" fill="none" stroke="#009390" stroke-width="6" stroke-linecap="round"/>
+    </g>
+    <!-- emergency pizza, under glass -->
+    <g class="bu-item" id="itPizza" tabindex="0" role="button" aria-label="A slice of pizza on a plate" transform="translate(430 354)">
+      <rect x="-96" y="-46" width="192" height="108" rx="10" fill="none" stroke="#A5DFDF" stroke-opacity=".75" stroke-width="3" stroke-dasharray="7 6"/>
+      <text x="0" y="-52" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="10" letter-spacing="1.4" fill="#F15B5B">BREAK GLASS</text>
+      <ellipse cx="0" cy="34" rx="80" ry="24" fill="#fff"/><ellipse cx="0" cy="34" rx="62" ry="16" fill="#D9D9D9"/>
+      <path d="M-46 -14Q0 -32 46 -14L6 52Q0 58 -6 52Z" fill="#FBC766"/>
+      <path d="M-50 -12Q0 -36 50 -12L46 -1Q0 -22 -46 -1Z" fill="#F9A100"/>
+      <g fill="#F15B5B"><circle cx="-16" cy="8" r="8"/><circle cx="14" cy="3" r="8"/><circle cx="1" cy="30" r="7"/></g>
+    </g>
+    <!-- an old license key, 2013 -->
+    <g class="bu-item" id="itLicense" tabindex="0" role="button" aria-label="An old license key from 2013" transform="translate(664 350) rotate(-4)">
+      <rect x="-88" y="-48" width="176" height="96" rx="7" fill="#BAB3CF"/>
+      <rect x="-88" y="-48" width="176" height="24" rx="7" fill="#00BBB4"/><rect x="-88" y="-34" width="176" height="10" fill="#00BBB4"/>
+      <text x="-78" y="-31" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="10" letter-spacing="1.4" fill="#082C2C">LICENSE KEY</text>
+      <text x="78" y="-31" text-anchor="end" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="10" fill="#082C2C">2013</text>
+      <g font-family="'Courier New', monospace" font-weight="700" font-size="11" fill="#141121"><text x="-78" y="-4">K7QXM-4TR2B-9WNHD</text><text x="-78" y="14">PL3VC-8ZJ5Y-XA6FG</text></g>
+      <rect x="-78" y="28" width="62" height="10" rx="2" fill="#968EB5"/><rect x="40" y="26" width="38" height="14" rx="3" fill="#FBC766"/>
+    </g>
+  </svg>
+  <div class="bu-drawer-caption" id="drawerCaption" role="status" aria-live="polite">Click things. There is no wrong answer.</div>
+  <div class="bu-drawer-actions"><button type="button" class="bu-plug" id="plugBtn" hidden>Plug into server</button></div>
+</dialog>
+<!-- The bookshelf, up close: readable spines -->
+<dialog class="bu-drawer" id="shelf" aria-label="Bookshelf">
+  <div class="bu-drawer-bar"><span>The shelf</span><button type="button" id="shelfClose" aria-label="Close the shelf">Close &times;</button></div>
+  <svg viewBox="0 0 800 300" class="bu-drawer-svg" id="shelfSvg" role="group" aria-label="Books on the shelf">
+    <rect x="6" y="6" width="788" height="288" rx="22" fill="#0f0d1c" stroke="#504384" stroke-width="12"/>
+    <rect x="30" y="30" width="740" height="240" rx="12" fill="#141121"/>
+    <rect x="30" y="236" width="740" height="34" rx="6" fill="#504384"/><rect x="30" y="236" width="740" height="6" fill="#968EB5"/>
+    <rect x="196" y="146" width="14" height="90" rx="3" fill="#282242"/><rect x="590" y="146" width="14" height="90" rx="3" fill="#282242"/>
+    <!-- MCSE for Dummies: yellow, and dusty -->
+    <g class="bu-item" id="itBook1" tabindex="0" role="button" aria-label="MCSE for Dummies" transform="translate(225 236)">
+      <rect x="0" y="-190" width="84" height="190" rx="4" fill="#FBC766"/><rect x="0" y="-190" width="84" height="12" rx="4" fill="#F9A100"/><rect x="0" y="-12" width="84" height="12" fill="#F9A100"/>
+      <text transform="translate(34 -98) rotate(-90)" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="800" font-size="30" fill="#141121">MCSE</text>
+      <text transform="translate(62 -98) rotate(-90)" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="14" fill="#141121">for Dummies</text>
+      <g fill="#D9D9D9" opacity=".6"><ellipse cx="20" cy="-190" rx="22" ry="5"/><ellipse cx="56" cy="-191" rx="26" ry="4"/><ellipse cx="42" cy="-186" rx="14" ry="3"/></g>
+      <path d="M0 -190q16 18 30 4M84 -190q-12 24 -30 10" fill="none" stroke="#D9D9D9" stroke-opacity=".5" stroke-width="1.5"/>
+    </g>
+    <!-- Network+ -->
+    <g class="bu-item" id="itBook2" tabindex="0" role="button" aria-label="Network+" transform="translate(317 236)">
+      <rect x="0" y="-168" width="76" height="168" rx="4" fill="#00BBB4"/><rect x="0" y="-168" width="76" height="12" rx="4" fill="#009390"/><rect x="0" y="-12" width="76" height="12" fill="#009390"/>
+      <text transform="translate(46 -84) rotate(-90)" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="800" font-size="25" fill="#082C2C">Network+</text>
+      <circle cx="38" cy="-136" r="0"/>
+    </g>
+    <!-- PowerShell in a Month of Lunches -->
+    <g class="bu-item" id="itBook3" tabindex="0" role="button" aria-label="PowerShell in a Month of Lunches" transform="translate(401 236)">
+      <rect x="0" y="-205" width="96" height="205" rx="4" fill="#504384"/><rect x="0" y="-205" width="96" height="12" rx="4" fill="#282242"/><rect x="0" y="-12" width="96" height="12" fill="#282242"/>
+      <text transform="translate(38 -104) rotate(-90)" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="800" font-size="16" fill="#fff">PowerShell in a</text>
+      <text transform="translate(64 -104) rotate(-90)" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="15" fill="#A5DFDF">Month of Lunches</text>
+    </g>
+    <!-- a black book with no title -->
+    <g class="bu-item" id="itBook4" tabindex="0" role="button" aria-label="A black book that says do not open" transform="translate(505 236)">
+      <rect x="0" y="-182" width="70" height="182" rx="4" fill="#0a0a14" stroke="#792E2E" stroke-width="3"/>
+      <text transform="translate(40 -92) rotate(-90)" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="800" font-size="14" letter-spacing="3" fill="#F15B5B">DO NOT OPEN</text>
+    </g>
+  </svg>
+  <div class="bu-drawer-caption" id="shelfCaption" role="status" aria-live="polite">Read the spines.</div>
+</dialog>
+<!-- The server rack, zoomed in (the phone-friendly way to play the puzzle) -->
+<dialog class="bu-drawer" id="rackZoom" aria-label="Server rack">
+  <div class="bu-drawer-bar"><span>Server rack</span><button type="button" id="rackClose" aria-label="Close the rack">Close &times;</button></div>
+  <div class="bu-rack-frame" id="rackList" role="group" aria-label="Server units"></div>
+  <div class="bu-drawer-caption" id="rackCaption" role="status" aria-live="polite">Tap a unit to power it on.</div>
+</dialog>
+<!-- The reveal: every clue found -->
+<dialog class="bu-drawer" id="reveal" aria-label="Case closed">
+  <div class="bu-reveal-card">
+    <div class="bu-reveal-kicker">Case closed</div>
+    <img src="assets/jesse.webp" alt="" width="96" height="96" class="bu-reveal-face">
+    <h2 class="bu-reveal-title">Jesse took down the service.</h2>
+    <p class="bu-reveal-text">Every clue points the same way. Stewart forgives him. Rewst will be right back.</p>
+    <button type="button" class="bu-reveal-close" id="revealClose">Back to the scene</button>
+  </div>
+</dialog>
+<!-- The trash can, up close: rummage -->
+<dialog class="bu-drawer" id="trash" aria-label="Trash can">
+  <div class="bu-drawer-bar"><span>Trash can</span><button type="button" id="trashClose" aria-label="Close the trash can">Close &times;</button></div>
+  <svg viewBox="0 0 800 300" class="bu-drawer-svg" id="trashSvg" role="group" aria-label="Things in the trash">
+    <rect x="6" y="6" width="788" height="288" rx="22" fill="#0f0d1c" stroke="#504384" stroke-width="12"/>
+    <rect x="30" y="30" width="740" height="240" rx="12" fill="#141121"/>
+    <path d="M30 150h740M300 30v240M560 30v240" stroke="#282242" stroke-width="5" fill="none"/>
+    <!-- crumpled postmortem draft -->
+    <g class="bu-item" id="itDraft" tabindex="0" role="button" aria-label="A crumpled postmortem draft" transform="translate(150 90) rotate(-8)">
+      <path d="M-52 -30L-20 -50L14 -42L50 -48L58 -8L46 26L52 46L10 54L-26 44L-56 50L-48 10Z" fill="#BAB3CF"/>
+      <path d="M-20 -50L-14 -10L14 -42M-48 10L-14 -10L10 54M46 26L-14 -10L58 -8" fill="none" stroke="#968EB5" stroke-width="3"/>
+      <g font-family="Poppins, Montserrat, sans-serif" font-weight="700" font-size="9" fill="#282242"><text x="-38" y="-2" transform="rotate(4)">Postmortem</text><text x="-30" y="12" font-size="8" fill="#504384">draft 14</text></g>
+    </g>
+    <!-- energy drink -->
+    <g class="bu-item" id="itCan" tabindex="0" role="button" aria-label="An empty energy drink can" transform="translate(430 90) rotate(14)">
+      <rect x="-26" y="-48" width="52" height="96" rx="9" fill="#00BBB4"/><rect x="-26" y="-14" width="52" height="30" fill="#082C2C"/>
+      <text x="0" y="7" text-anchor="middle" font-family="Poppins, Montserrat, sans-serif" font-weight="800" font-size="15" letter-spacing="1" fill="#FBC766">VOLT</text>
+      <ellipse cx="0" cy="-48" rx="22" ry="6" fill="#A5DFDF"/><path d="M-8 -50l16 0" stroke="#009390" stroke-width="3"/>
+    </g>
+    <!-- pizza crust -->
+    <g class="bu-item" id="itCrust" tabindex="0" role="button" aria-label="A pizza crust" transform="translate(664 90) rotate(-18)">
+      <path d="M-56 -8Q-10 -40 50 -14Q62 -6 54 8Q40 24 18 12Q-14 -2 -48 18Q-62 14 -56 -8Z" fill="#F9A100"/>
+      <path d="M-44 -4Q-8 -26 40 -8" fill="none" stroke="#FBC766" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="-12" cy="4" r="3" fill="#F15B5B"/>
+    </g>
+    <!-- do not press note -->
+    <g class="bu-item" id="itDoNot" tabindex="0" role="button" aria-label="A note that says do not press" transform="translate(150 212) rotate(5)">
+      <rect x="-54" y="-42" width="108" height="84" fill="#FDD999"/>
+      <g font-family="Poppins, Montserrat, sans-serif" font-weight="800" font-size="18" fill="#792E2E" text-anchor="middle"><text x="0" y="-6">DO NOT</text><text x="0" y="18">PRESS</text></g>
+    </g>
+    <!-- dead mouse -->
+    <g class="bu-item" id="itMouse" tabindex="0" role="button" aria-label="A dead computer mouse" transform="translate(430 212)">
+      <path d="M-14 -30C-60 -26 -60 40 -8 42H8C60 40 60 -26 14 -30Z" fill="#968EB5"/><path d="M0 -30V-6M-48 -6H48" stroke="#504384" stroke-width="4" fill="none"/>
+      <path d="M0 -30C0 -50 30 -56 40 -70" fill="none" stroke="#BAB3CF" stroke-width="5" stroke-linecap="round"/>
+      <g stroke="#141121" stroke-width="3" stroke-linecap="round"><path d="M-22 12l10 10M-12 12l-10 10M12 12l10 10M22 12l-10 10"/></g>
+    </g>
+    <!-- lone sock -->
+    <g class="bu-item" id="itSock" tabindex="0" role="button" aria-label="A single sock" transform="translate(664 212) rotate(-10)">
+      <path d="M-22 -48H18V4L50 22Q60 34 46 44L18 46Q-4 40 -22 14Z" fill="#504384"/>
+      <rect x="-22" y="-48" width="40" height="14" fill="#282242"/><rect x="-22" y="-22" width="40" height="8" fill="#00BBB4"/>
+    </g>
+  </svg>
+  <div class="bu-drawer-caption" id="trashCaption" role="status" aria-live="polite">Rummage. Nobody is watching.</div>
+</dialog>
+<!-- The OSI poster, up close: click a layer for a quip -->
+<dialog class="bu-poster bu-osi" id="poster" aria-label="OSI model poster">
+  <div class="bu-poster-sheet">
+    <div class="bu-poster-head">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="8" width="48" height="9" rx="3" fill="#005655"/><rect x="8" y="21" width="48" height="9" rx="3" fill="#005655"/><rect x="8" y="34" width="48" height="9" rx="3" fill="#005655"/><rect x="8" y="47" width="48" height="9" rx="3" fill="#005655"/></svg>
+      <div><b>OSI MODEL</b><span>Seven layers. Each one depends on the one below. Please Do Not Throw Sausage Pizza Away.</span></div>
+      <button type="button" id="posterClose" aria-label="Close the poster">Close &times;</button>
+    </div>
+    <ul class="bu-poster-list" id="posterList"></ul>
+    <div class="bu-poster-foot" id="posterFoot" role="status" aria-live="polite">Click a layer.</div>
+  </div>
+</dialog>
+<script src="app.js"></script>
+</body>
+</html>

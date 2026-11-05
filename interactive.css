@@ -1,0 +1,206 @@
+/* Click-and-find layer for the diorama: hotspots, rain, lightning, plant, rack puzzle, peekers, caption, drawer.
+   All positions come from the picture's own 1920x1080 coordinates (JS turns them into percentages). */
+
+.bu-plate-solved { position: absolute; inset: 0; opacity: 0; transition: opacity 900ms ease; pointer-events: none; }
+.bu-plate-solved.is-on { opacity: 1; }
+.bu-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* hotspots: invisible buttons; a soft teal ring on hover/focus so they feel findable */
+.bu-hs { position: absolute; padding: 0; border: 0; background: transparent; cursor: pointer; border-radius: 10px; }
+.bu-hs:hover, .bu-hs:focus-visible { box-shadow: 0 0 0 2px hsla(var(--primary) / .55), 0 0 18px hsla(var(--primary) / .25); }
+.bu-hs:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+.bu-hs-stewart { cursor: default; border-radius: 40% 40% 30% 30%; }
+.bu-hs-stewart:hover { box-shadow: none; }
+.bu-unit { position: absolute; padding: 0; border: 0; background: transparent; cursor: pointer; border-radius: 6px; }
+.bu-unit:hover, .bu-unit:focus-visible { box-shadow: 0 0 0 2px hsla(var(--primary) / .5); }
+.bu-unit:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 1px; }
+
+/* rain */
+.bu-drop { stroke: #968EB5; stroke-width: 3; stroke-linecap: round; opacity: .65; animation: bu-rain 1.2s linear infinite; }
+.bu-storm .bu-drop { animation-duration: .45s; opacity: .9; }
+@keyframes bu-rain { from { transform: translate(0, -60px); } to { transform: translate(-14px, 330px); } }
+
+/* lightning */
+.bu-flash-sky, .bu-flash-room { fill: #fff; opacity: 0; }
+.bu-flash-sky.go { animation: bu-flash-sky 700ms ease-out; }
+.bu-flash-room.go { animation: bu-flash-room 700ms ease-out; }
+@keyframes bu-flash-sky { 0% { opacity: 0; } 6% { opacity: .95; } 16% { opacity: .15; } 26% { opacity: .75; } 100% { opacity: 0; } }
+@keyframes bu-flash-room { 0% { opacity: 0; } 6% { opacity: .12; } 16% { opacity: .02; } 26% { opacity: .09; } 100% { opacity: 0; } }
+.bu-win-bar { fill: #504384; }
+
+/* plant */
+.bu-leaf { transform-origin: 1332px 252px; transition: transform 700ms cubic-bezier(.4, 0, .2, 1); }
+#leafA.is-drooped { transform: rotate(-82deg); }
+#leafB.is-drooped { transform: rotate(84deg); }
+.bu-leaf.perk { transition: transform 650ms cubic-bezier(.34, 1.7, .5, 1); }
+
+/* rack LEDs */
+.bu-led { transition: fill 220ms ease, opacity 220ms ease, r 220ms ease; }
+.bu-led.ok { filter: none; }
+.bu-led.wave { animation: bu-led-wave 1.1s ease-in-out infinite; }
+@keyframes bu-led-wave { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+
+/* Stewart's pupil glides */
+#pupil { will-change: transform; }
+
+/* the monitor pulse (a secret, or the whole set, was found) */
+.bu-pulse { fill: none; stroke: #00BBB4; stroke-width: 6; opacity: 0; }
+.bu-pulse.go { animation: bu-pulse 1400ms ease-out; }
+@keyframes bu-pulse { 0% { opacity: .9; stroke-width: 4; } 100% { opacity: 0; stroke-width: 34; } }
+
+/* peekers: Danial behind the rack, Jesse outside the window. They duck when you reach for them. */
+.bu-clip { position: absolute; overflow: hidden; pointer-events: none; }
+.bu-peeker { position: absolute; bottom: 0; width: calc(var(--w) * 0.04375); padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; transform: translateY(105%); transition: transform var(--dur, 240ms) var(--ease, ease-in-out); }
+/* creeping in is two slow steps (eyes first, then the face); ducking is quick */
+.bu-peeker.creep { transform: translateY(66%); }
+.bu-peeker.up { transform: translateY(34%); }
+.bu-peeker.caught { transform: translateY(30%) rotate(-5deg); }
+.bu-peeker.up img { animation: bu-sway 3.6s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes bu-sway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+.bu-peeker img { display: block; width: 100%; height: auto; }
+.bu-peeker:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; border-radius: 12px; }
+.bu-sweat { position: absolute; right: 6%; top: 24%; width: 12%; aspect-ratio: .7; background: #A5DFDF; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; opacity: 0; }
+.bu-peeker.up .bu-sweat { animation: bu-sweat 1.5s ease-in infinite; }
+.bu-peeker#jesse .bu-sweat { display: none; }
+@keyframes bu-sweat { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: .95; } 100% { transform: translateY(90%); opacity: 0; } }
+
+/* mug close-up card */
+.bu-mug-card { position: absolute; left: 62%; top: 38%; width: 9%; min-width: 64px; padding: 6px; background: rgba(8, 44, 44, .94); border: 1px solid hsl(var(--primary)); border-radius: 12px; opacity: 0; transform: translateY(8px) scale(.94); transition: opacity 220ms ease, transform 220ms ease; pointer-events: none; }
+.bu-mug-card.show { opacity: 1; transform: none; }
+.bu-mug-card svg { display: block; width: 100%; height: auto; }
+
+/* caption: the narrator, adventure-game style */
+.bu-caption { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%) translateY(6px); max-width: calc(100% - 28px); padding: 8px 16px; border-radius: 8px; background: rgba(8, 44, 44, .88); border: 1px solid hsla(var(--primary) / .5); color: #A5DFDF; font-family: ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace; font-size: 13px; line-height: 1.4; text-align: center; opacity: 0; transition: opacity 200ms ease, transform 200ms ease; pointer-events: none; }
+.bu-caption.show { opacity: 1; transform: translateX(-50%); }
+.bu-caption::before { content: '> '; color: hsl(var(--primary)); }
+
+/* secrets tray */
+.bu-tray { position: absolute; right: 16px; top: 14px; display: flex; align-items: center; gap: 10px; padding: 7px 12px; border-radius: 999px; background: rgba(20, 17, 33, .78); border: 1px solid hsl(var(--border)); backdrop-filter: blur(4px); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.bu-tray-pips { display: flex; gap: 5px; }
+.bu-tray-pips i { width: 8px; height: 8px; border-radius: 50%; background: hsl(var(--border)); transition: background 250ms ease, transform 250ms ease; }
+.bu-tray-pips i.on { background: hsl(var(--primary)); transform: scale(1.15); }
+.bu-tray.done { color: hsl(var(--primary)); border-color: hsl(var(--primary)); }
+@media (max-width: 760px) { .bu-tray { right: 10px; top: 10px; padding: 5px 10px; font-size: 10px; } .bu-tray-label { display: none; } .bu-caption { font-size: 12px; bottom: 8px; } }
+
+/* the drawer, zoomed in */
+.bu-drawer { border: 0; padding: 0; background: transparent; width: min(94vw, 860px); max-width: none; overflow: visible; color: #fff; }
+.bu-drawer::backdrop { background: rgba(8, 8, 18, .86); backdrop-filter: blur(3px); }
+.bu-drawer[open] { animation: bu-drawerIn 260ms cubic-bezier(.2, .9, .3, 1.1); }
+.bu-drawer-bar { display: flex; align-items: center; justify-content: space-between; padding: 0 4px 10px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.bu-drawer-bar button { background: rgba(255, 255, 255, .1); border: 0; color: #fff; padding: 7px 14px; border-radius: 999px; font: inherit; letter-spacing: .06em; text-transform: none; cursor: pointer; }
+.bu-drawer-bar button:hover { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+.bu-drawer-bar button:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+.bu-drawer-svg { display: block; width: 100%; height: auto; border-radius: 22px; box-shadow: 0 24px 80px rgba(0, 0, 0, .6); }
+.bu-drawer-caption { margin-top: 12px; min-height: 22px; text-align: center; font-family: ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace; font-size: 14px; color: #A5DFDF; }
+.bu-drawer-caption::before { content: '> '; color: hsl(var(--primary)); }
+.bu-item { cursor: pointer; transition: transform 160ms ease; transform-box: fill-box; transform-origin: center; }
+.bu-item:hover, .bu-item:focus-visible { filter: drop-shadow(0 0 10px rgba(0, 187, 180, .6)); }
+.bu-item:focus-visible { outline: none; }
+.bu-item.wiggle { animation: bu-wiggle 420ms ease; }
+@keyframes bu-wiggle { 0%, 100% { rotate: 0deg; } 25% { rotate: -7deg; } 50% { rotate: 6deg; } 75% { rotate: -3deg; } }
+@keyframes bu-drawerIn { from { opacity: 0; transform: translateY(24px) scale(.96); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .bu-led.wave, .bu-peeker.up img, .bu-peeker.up .bu-sweat, .bu-pulse.go, .bu-drawer[open], .bu-item.wiggle { animation: none; }
+  /* the rain is calmer rather than gone: slow and faint */
+  .bu-drop, .bu-storm .bu-drop { animation-duration: 3.8s !important; opacity: .35; }
+  .bu-leaf, .bu-peeker, .bu-plate-solved { transition-duration: 1ms; }
+  .bu-flash-sky.go, .bu-flash-room.go { animation-duration: 200ms; }
+}
+
+/* the Wireshark poster, up close */
+.bu-poster { border: 0; padding: 0; background: transparent; width: min(94vw, 700px); max-width: none; max-height: 90vh; overflow: visible; color: #fff; }
+.bu-poster::backdrop { background: rgba(8, 8, 18, .86); backdrop-filter: blur(3px); }
+.bu-poster[open] { animation: bu-drawerIn 260ms cubic-bezier(.2, .9, .3, 1.1); }
+.bu-poster-sheet { background: #141121; border: 3px solid #504384; border-radius: 16px; overflow: hidden; box-shadow: 0 24px 80px rgba(0, 0, 0, .6); }
+.bu-poster-head { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: hsl(var(--primary)); color: #082C2C; }
+.bu-poster-head svg { width: 38px; height: 38px; flex: 0 0 auto; }
+.bu-poster-head div { flex: 1; display: flex; flex-direction: column; }
+.bu-poster-head b { font-size: 22px; letter-spacing: .06em; line-height: 1.1; }
+.bu-poster-head span { font-size: 12px; font-weight: 600; opacity: .8; }
+.bu-poster-head button { background: rgba(8, 44, 44, .18); border: 0; color: inherit; padding: 7px 14px; border-radius: 999px; font: inherit; font-weight: 700; font-size: 13px; cursor: pointer; }
+.bu-poster-head button:hover { background: rgba(8, 44, 44, .35); }
+.bu-poster-head button:focus-visible { outline: 2px solid #082C2C; outline-offset: 2px; }
+.bu-poster-list { list-style: none; margin: 0; padding: 10px 12px; max-height: min(58vh, 460px); overflow: auto; }
+.bu-poster-list button { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 4px 16px; align-items: center; width: 100%; text-align: left; padding: 9px 10px; margin: 2px 0; border: 0; border-radius: 8px; background: transparent; color: inherit; font-family: inherit; cursor: pointer; }
+.bu-poster-list button:hover, .bu-poster-list button:focus-visible { background: #282242; }
+.bu-poster-list button:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: -2px; }
+.bu-poster-list code { font-family: ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace; font-size: 13px; color: #A5DFDF; background: #0f0d1c; padding: 5px 9px; border-radius: 6px; overflow-wrap: anywhere; }
+.bu-poster-list span { font-size: 12.5px; color: hsl(var(--muted-foreground)); }
+.bu-poster-foot { padding: 12px 20px 16px; border-top: 1px solid #282242; min-height: 46px; font-family: ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace; font-size: 13px; color: #A5DFDF; }
+.bu-poster-foot::before { content: '> '; color: hsl(var(--primary)); }
+@media (max-width: 560px) { .bu-poster-list button { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .bu-poster[open] { animation: none; } }
+
+/* the rubber duck on the desk, and his speech bubble */
+.bu-duck { transform-box: fill-box; transform-origin: 50% 100%; }
+.bu-duck.hop { animation: bu-duck-hop 560ms ease; }
+@keyframes bu-duck-hop { 0% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-34px) rotate(-7deg); } 62% { transform: translateY(0) rotate(5deg); } 100% { transform: none; } }
+.bu-duck-bubble { position: absolute; right: 26%; bottom: 43%; width: 22%; min-width: 150px; padding: 10px 14px; border-radius: 14px; background: #fff; color: #141121; font-size: clamp(11px, calc(var(--w) * 0.0098), 15px); font-weight: 600; line-height: 1.35; opacity: 0; transform: translateY(6px) scale(.96); transition: opacity 200ms ease, transform 200ms ease; pointer-events: none; z-index: 3; box-shadow: 0 6px 24px rgba(0, 0, 0, .35); }
+.bu-duck-bubble.show { opacity: 1; transform: none; }
+.bu-duck-bubble::after { content: ''; position: absolute; right: 8%; bottom: -9px; border: 9px solid transparent; border-top-color: #fff; border-bottom: 0; }
+@media (prefers-reduced-motion: reduce) { .bu-duck.hop { animation: none; } }
+
+/* the OSI poster: numbered layers, 7 at the top down to 1 */
+.bu-osi .bu-poster-head span { font-size: 11.5px; line-height: 1.35; max-width: 46ch; }
+.bu-osi .bu-poster-list button { grid-template-columns: 38px minmax(0, 1fr) minmax(0, 1.4fr); gap: 4px 14px; }
+.bu-osi .bu-osi-n { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-weight: 700; font-size: 16px; }
+.bu-osi .bu-poster-list b { font-size: 15px; }
+.bu-osi .bu-poster-list span:not(.bu-osi-n) { font-size: 13px; color: hsl(var(--muted-foreground)); }
+.bu-osi .bu-osi-user { opacity: .7; }
+.bu-osi .bu-osi-user .bu-osi-n { background: transparent; border: 2px dashed #504384; color: #968EB5; }
+@media (max-width: 560px) { .bu-osi .bu-poster-list button { grid-template-columns: 38px 1fr; } .bu-osi .bu-poster-list span:not(.bu-osi-n) { grid-column: 2; } }
+
+/* the crash: LEDs flicker red, smoke rises */
+.bu-led.crash { animation: bu-crash-flick .2s steps(1) infinite; }
+@keyframes bu-crash-flick { 0% { opacity: 1; } 50% { opacity: .12; } }
+.bu-smoke ellipse { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
+.bu-smoke.go ellipse { animation: bu-smoke 3.2s ease-out forwards; }
+.bu-smoke.go ellipse:nth-child(2) { animation-delay: .35s; } .bu-smoke.go ellipse:nth-child(3) { animation-delay: .7s; } .bu-smoke.go ellipse:nth-child(4) { animation-delay: 1.05s; }
+@keyframes bu-smoke { 0% { transform: translateY(0) scale(.5); opacity: 0; } 18% { opacity: .55; } 100% { transform: translateY(-150px) scale(1.7); opacity: 0; } }
+
+/* "Plug into server" in the drawer */
+.bu-drawer-actions { display: flex; justify-content: center; margin-top: 12px; min-height: 46px; }
+.bu-plug { height: 44px; padding: 0 26px; border: 0; border-radius: var(--radius); background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer; animation: bu-plug-in 260ms cubic-bezier(.2, .9, .3, 1.2); }
+.bu-plug[hidden] { display: none; }
+.bu-plug:hover { opacity: .9; }
+.bu-plug:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@keyframes bu-plug-in { from { opacity: 0; transform: translateY(8px) scale(.94); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .bu-led.crash { animation: none; } .bu-smoke.go ellipse { animation: none; opacity: .3; } .bu-plug { animation: none; } }
+
+/* Danial, sneaking out when nobody is looking */
+.bu-walker { position: absolute; padding: 0; border: 0; background: transparent; cursor: pointer; display: block; }
+.bu-walker[hidden] { display: none; }
+.bu-walker img { display: block; width: 100%; height: auto; animation: bu-tiptoe .46s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+@keyframes bu-tiptoe { from { transform: translateY(0) rotate(-3deg); } to { transform: translateY(-9%) rotate(3deg); } }
+
+/* konami: the whole room does a barrel roll */
+.bu-scene.roll { animation: bu-roll 1.5s cubic-bezier(.5, 0, .3, 1); }
+@keyframes bu-roll { to { transform: rotate(360deg); } }
+
+/* the rack, zoomed (only offered on narrow screens, where the little units are too small to tap) */
+#hsRack { display: none; }
+@media (max-width: 900px) { #units { display: none; } #hsRack { display: block; } }
+.bu-rack-frame { display: grid; gap: 10px; padding: 14px; background: #0f0d1c; border: 12px solid #504384; border-radius: 22px; box-shadow: 0 24px 80px rgba(0, 0, 0, .6); }
+.bu-rackrow { display: flex; align-items: center; gap: 14px; min-height: 54px; padding: 0 18px; border: 0; border-radius: 10px; background: #282242; color: #fff; font: 700 15px/1.2 inherit; font-family: inherit; text-align: left; cursor: pointer; transition: transform 120ms ease, background 160ms ease; }
+.bu-rackrow:hover { background: #3a3260; }
+.bu-rackrow:active { transform: scale(.985); }
+.bu-rackrow:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+.bu-rackrow i { flex: none; width: 16px; height: 16px; border-radius: 50%; background: #005655; box-shadow: 0 0 0 3px rgba(255, 255, 255, .08); transition: background 160ms ease; }
+@media (prefers-reduced-motion: reduce) { .bu-walker img { animation: none; } .bu-scene.roll { animation: none; } .bu-rackrow { transition: none; } }
+
+/* the desk phone's message light */
+.bu-phone-led { animation: bu-blink 1.3s steps(1) infinite; }
+.bu-phone-led.read { animation: none; opacity: .35; }
+@keyframes bu-blink { 0% { opacity: 1; } 55% { opacity: .15; } }
+@media (prefers-reduced-motion: reduce) { .bu-phone-led { animation: none; } }
+
+/* the reveal */
+.bu-reveal-card { max-width: 520px; margin: 0 auto; padding: 30px 28px 26px; text-align: center; background: #0f0d1c; border: 12px solid #504384; border-radius: 22px; box-shadow: 0 24px 80px rgba(0, 0, 0, .6); }
+.bu-reveal-kicker { font-size: 12px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: hsl(var(--primary)); }
+.bu-reveal-face { display: block; margin: 16px auto 12px; width: 96px; height: 96px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 4px #282242, 0 0 0 7px hsla(var(--primary) / .5); }
+.bu-reveal-title { margin: 0 0 8px; font-size: clamp(20px, 4.6vw, 26px); line-height: 1.2; color: #fff; }
+.bu-reveal-text { margin: 0 0 20px; font-size: 14px; line-height: 1.5; color: hsl(var(--muted-foreground)); }
+.bu-reveal-close { height: 44px; padding: 0 24px; border: 0; border-radius: var(--radius); background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); font: 700 14px inherit; font-family: inherit; cursor: pointer; }
+.bu-reveal-close:hover { opacity: .9; }
+.bu-reveal-close:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
