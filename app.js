@@ -484,7 +484,7 @@ setInterval(() => {
   if (now - lastActive > IDLE_MS && now - lastWalk > IDLE_MS * 1.6) sneak();
 }, 500);
 
-// ── the code: up up down down left right left right B A (or tap Stewart seven times, for phones) ──
+// ── the code: up up down down left right left right B A (or tap Stewart seven times, for phones; he gives hints from the third tap) ──
 const KONAMI = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
 let kIdx = 0, tapN = 0, tapTimer = 0;
 function konami() {
@@ -501,7 +501,10 @@ document.addEventListener('keydown', (e) => {
 });
 $('hsStewart').addEventListener('click', () => {
   clearTimeout(tapTimer); tapTimer = setTimeout(() => { tapN = 0; }, 3500);
-  if (++tapN >= 7) { tapN = 0; konami(); }
+  if (++tapN >= 7) { tapN = 0; konami(); return; }
+  // phones have no keyboard, so tapping him is the way in: nudge people along once they start
+  const tapHints = { 3: 'Stewart is starting to look dizzy...', 5: 'Something is stirring. Keep tapping him.' };
+  if (tapHints[tapN]) sayTimed(tapHints[tapN], 2200);
 });
 
 // ── a nudge, once ──
