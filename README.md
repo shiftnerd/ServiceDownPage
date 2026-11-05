@@ -23,5 +23,4 @@ No build step and no dependencies. It's plain HTML, CSS and JS.
 - The monitor video (`assets/the-service-is-down.mp4`) is only fetched on first click.
 - Progress is kept in `sessionStorage`, so it resets when the tab closes.
 - Animations respect `prefers-reduced-motion`.
-- Add `?idle=1500` to the URL to shorten the idle timer when testing.
 - The page uses 1920x1080 coordinates for hotspots (see `data-box` in `index.html`), so new interactive elements should be placed in those units.
