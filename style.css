@@ -22,10 +22,9 @@ body { background: hsl(var(--background)); color: hsl(var(--foreground)); font-f
 
 /* ── Hero: the diorama ── */
 .bu-hero { position: relative; margin: 0; width: 100%; aspect-ratio: 2.34 / 1; overflow: hidden; container-type: inline-size; background: #141121; }
-/* below 560px the scene stops shrinking and crops in around the monitor, so the screen stays tappable */
-.bu-scene { --w: max(100cqw, 560px); position: relative; width: var(--w); aspect-ratio: 16 / 9; margin-left: clamp(calc(100cqw - var(--w)), calc(50cqw - var(--w) * 0.534), 0px); margin-top: calc(var(--w) * -0.0675); } /* crops the empty ceiling and floor */
+/* the whole scene always fits the width, so nothing on the left or right is cropped on phones */
+.bu-scene { --w: 100cqw; position: relative; width: var(--w); aspect-ratio: 16 / 9; margin-top: calc(var(--w) * -0.0675); } /* crops the empty ceiling and floor */
 .bu-scene-img { display: block; width: 100%; height: 100%; }
-@media (max-width: 559px) { .bu-hero { aspect-ratio: auto; height: 239px; } }
 
 /* the monitor screen (a button) */
 .bu-screen { position: absolute; left: var(--scr-left); top: var(--scr-top); width: var(--scr-w); height: var(--scr-h); padding: 0; border: 0; border-radius: 1.6cqw; overflow: hidden; background: #0f0d1c; color: inherit; cursor: pointer; container-type: size; font: inherit; }
