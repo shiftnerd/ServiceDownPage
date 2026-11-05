@@ -6,16 +6,6 @@ Stewart the rooster is at his desk, it's raining, and something is wrong with th
 
 No build step and no dependencies. It's plain HTML, CSS and JS.
 
-## Running it
-
-Open `index.html` in a browser. If you'd rather serve it:
-
-```
-python -m http.server 8000
-```
-
-then go to http://localhost:8000.
-
 ## Layout
 
 | File | What it is |
