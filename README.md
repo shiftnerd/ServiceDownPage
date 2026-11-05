@@ -1,4 +1,4 @@
-# service-is-down
+# The Service Is Down
 
 A "We'll Be Right Back" page for when the Rewst service is down. It looks like a normal status page, but the illustration is a small click-and-find game.
 
